@@ -12,6 +12,6 @@ class ConfigReader:
             self.http = data["http"]
             self.websocket = data["websocket"]
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
-            raise ConfigReaderError()
+            raise ConfigReaderError("The config.json in the project with 'http' and 'websocket' keys are required!")
 
 
