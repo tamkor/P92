@@ -3,10 +3,10 @@ import logging
 from fastapi import FastAPI, WebSocket
 from starlette.websockets import WebSocketDisconnect
 
-app = FastAPI()
+websocket_server_app = FastAPI()
 
 
-@app.websocket("/")
+@websocket_server_app.websocket("/")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     try:
@@ -15,4 +15,4 @@ async def websocket_endpoint(websocket: WebSocket):
             logging.info("Data arrived from the gateway, trying to send it back.")
             await websocket.send_text(received_data)
     except WebSocketDisconnect:
-        pass  # intentionally - disconnecting after the HTTP reply in the http_server is is expected behavior.
+        pass  # intentionally - disconnecting after the HTTP reply in the http_server is an expected behavior.

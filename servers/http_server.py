@@ -8,11 +8,14 @@ from starlette import status
 
 from configs.servers_config_reader import ConfigReader
 
-app = FastAPI()
+http_server_app = FastAPI()
 servers_config = ConfigReader()
 
+JSON_ERROR_MSG = "The given data or the received reply from the websocket server is not a valid JSON!"
+WS_ERROR_MSG = "Something went wrong while trying to connect to the websocket server."
 
-@app.post("/api/ui")
+
+@http_server_app.post("/api/ui")
 async def forward(request: Request):
     try:
         logging.info("Request arrived to the gateway, trying to forward it to the websocket server.")
@@ -27,10 +30,7 @@ async def forward(request: Request):
         return websocket_reply
 
     except json.JSONDecodeError:
-        raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            detail="The given data or the received reply from the websocket server is not a valid JSON!")
+        raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail=JSON_ERROR_MSG)
 
-    except socket.gaierror:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                            detail="Something went wrong while trying to connect to the websocket server.")
+    except (socket.gaierror, ConnectionRefusedError):
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=WS_ERROR_MSG)

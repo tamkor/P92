@@ -1,0 +1,9 @@
+{
+  "http_server": {
+    "host": "localhost"
+  },
+  "websocket_server": {
+    "host": "localhost",
+    "port": 8081
+  }
+}

@@ -7,7 +7,7 @@ from configs.servers_config_reader import ConfigReader
 
 
 async def create_webserver(file_name: str, host: str, port: int):
-    server_config = uvicorn.Config(f"servers.{file_name}:app", host=host, port=port, log_level="info")
+    server_config = uvicorn.Config(f"servers.{file_name}:{file_name}_app", host=host, port=port, log_level="info")
     server = uvicorn.Server(server_config)
     await server.serve()
 
